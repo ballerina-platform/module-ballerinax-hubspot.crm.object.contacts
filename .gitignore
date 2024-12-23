@@ -56,3 +56,6 @@ build
 
 # Ignore Docker env file
 docker.env
+
+# Test config file
+ballerina/tests/Config.toml
