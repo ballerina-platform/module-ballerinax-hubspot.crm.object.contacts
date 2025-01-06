@@ -14,84 +14,210 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerina/http;
 import ballerina/test;
 
-// configurable OAuth2RefreshTokenGrantConfig & readonly authConfig = ?;
+configurable OAuth2RefreshTokenGrantConfig & readonly authConfig = ?;
 
-@test:Config {}
+Client baseClient = check new (config = {auth: authConfig});
+
+const int contactToContactAssociationTypeId = 449;
+string testContactId = "";
+
+@test:Config {
+    dependsOn: [testCreateBatchOfContacts]
+}
 function testMergeTwoContactsWithSameType() returns error? {
-
-    test:assertTrue(true);
+    // create a another contact to be merged
+    string testFirstName = "jimmy";
+    SimplePublicObject|error newContact = baseClient->/.post({
+        associations: [
+            {
+                to: {
+                    id: "1"
+                }
+            }
+        ],
+        objectWriteTraceId: "1",
+        properties: {
+            "firstname": testFirstName
+        }
+    });
+    string newContactId = newContact is SimplePublicObject ? newContact.id : "";
+    // merge the two contacts created
+    SimplePublicObject|error response = baseClient->/merge.post({
+        objectIdToMerge: testContactId,
+        primaryObjectId: newContactId
+    });
+    test:assertTrue(response is SimplePublicObject);
 }
 
 @test:Config {}
 function testArchiveBatchOfContactsById() returns error? {
+    string contactId = "4243242";
+    http:Response|error response = check baseClient->/batch/archive.post({
+        inputs: [
+            {
+                id: contactId
+            }
+        ]
+    });
 
-    test:assertTrue(true);
+    test:assertTrue(response is http:Response && response.statusCode == 204);
 
 }
 
-@test:Config {}
-function testUpdateBatchOfContactsByInternalIdOrUniquePropertyValues() returns error? {
+@test:Config {
+    dependsOn: [testCreateContact]
+}
+function testReadBatchOfContactsByInternalIdOrUniquePropertyValues() returns error? {
+    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error response = baseClient->/batch/read.post({
+        propertiesWithHistory: ["firstname"],
+        idProperty: "email",
+        inputs: [
+            {
+                id: testContactId
+            }
+        ],
+        properties: ["firstname"]
+    });
 
-    test:assertTrue(true);
+    test:assertTrue(response is BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors);
 
 }
 
 @test:Config {}
 function testCreateContact() returns error? {
-    test:assertTrue(true);
+    string testFirstName = "john";
+    SimplePublicObject|error response = baseClient->/.post({
+        associations: [
+            {
+                to: {
+                    id: "1"
+                }
+            }
+        ],
+        objectWriteTraceId: "1",
+        properties: {
+            "firstname": testFirstName
+        }
+    });
+    // set the test contact id as created one
+    testContactId = response is SimplePublicObject ? response.id : "";
+    test:assertTrue(response is SimplePublicObject && response.properties["firstname"] == testFirstName);
 }
 
 @test:Config {}
 function testGetPageOfContacts() returns error? {
-    test:assertTrue(true);
+    CollectionResponseSimplePublicObjectWithAssociationsForwardPaging|error response = baseClient->/();
+    test:assertTrue(response is CollectionResponseSimplePublicObjectWithAssociationsForwardPaging);
 }
 
-@test:Config {}
-function testDeleteContactById() returns error? {
-    test:assertTrue(true);
-
+@test:Config {
+    dependsOn: [testCreateContact]
 }
-
-@test:Config {}
-function testPartialUpdateOfContactByContactId() returns error? {
-    test:assertTrue(true);
-}
-
-@test:Config {}
 function testGetContactByContactId() returns error? {
-    test:assertTrue(true);
+    SimplePublicObjectWithAssociations|error response = baseClient->/[testContactId]();
+    test:assertTrue(response is SimplePublicObjectWithAssociations && response.id == testContactId);
 }
 
-@test:Config {}
-function testCreateBatchOfContacts() returns error? {
+@test:Config {
+    dependsOn: [testGetContactByContactId]
+}
+function testPartialUpdateOfContactByContactId() returns error? {
+    string testNewFirstName = "johny";
+    SimplePublicObject|error response = baseClient->/[testContactId].patch({
+        objectWriteTraceId: "1",
+        properties: {
+            "firstname": testNewFirstName
+        }
+    });
+    test:assertTrue(response is SimplePublicObject && response.properties["firstname"] == testNewFirstName);
+}
 
-    test:assertTrue(true);
+@test:Config {
+    dependsOn: [testMergeTwoContactsWithSameType]
+}
+function testDeleteContactById() returns error? {
+    http:Response|error response = baseClient->/[testContactId].delete();
+    test:assertTrue(response is http:Response && response.statusCode == 204);
+}
+
+@test:Config {
+    dependsOn: [testUpsertBatchOfContacts]
+}
+function testCreateBatchOfContacts() returns error? {
+    string testFirstName = "gayumi";
+    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error response = baseClient->/batch/create.post({
+        inputs: [
+            {
+                associations: [
+                    
+                ],
+                properties: {
+                    "firstname": testFirstName
+                }
+            }
+        ]
+    });
+    test:assertTrue(response is BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors);
 
 }
 
 @test:Config {}
 function testSearch() returns error? {
-
-    test:assertTrue(true);
+    string testSearchQuery = "john";
+    CollectionResponseWithTotalSimplePublicObjectForwardPaging|error response = baseClient->/search.post({
+        query: testSearchQuery,
+        'limit: 1,
+        after: "0"
+    });
+    test:assertTrue(response is CollectionResponseWithTotalSimplePublicObjectForwardPaging && response.total >= 0);
 }
 
-@test:Config {}
+@test:Config {
+    dependsOn: [testDeleteContactById]
+}
 function testGDPRDelete() returns error? {
-    test:assertTrue(true);
+    http:Response|error response = baseClient->/gdpr\-delete.post({
+        objectId: testContactId
+    });
+    test:assertTrue(response is http:Response && response.statusCode == 204);
 
 }
 
 @test:Config {}
 function testBatchRead() returns error? {
-    test:assertTrue(true);
-    test:assertFalse(false);
+    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error response = baseClient->/batch/read.post({
+        propertiesWithHistory: ["firstname"],
+        idProperty: "",
+        inputs: [
+            {
+                id: testContactId
+            }
+        ],
+        properties: ["firstname"]
+    });
+    test:assertTrue(response is BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors);
+
 }
 
-@test:Config {}
+@test:Config {
+    dependsOn: [testPartialUpdateOfContactByContactId]
+}
 function testUpsertBatchOfContacts() returns error? {
-
-    test:assertTrue(true);
-    test:assertFalse(false);
+    string testUpdatedFirstName = "johnee";
+    string testEmail = "johnee@example.com";
+    BatchResponseSimplePublicUpsertObject|BatchResponseSimplePublicUpsertObjectWithErrors|error response = baseClient->/batch/upsert.post({
+        inputs: [
+            {
+                idProperty: "email",
+                id: testEmail,
+                properties: {
+                    "firstname": testUpdatedFirstName
+                }
+            }
+        ]
+    });
+    test:assertTrue(response is BatchResponseSimplePublicUpsertObject|BatchResponseSimplePublicUpsertObjectWithErrors);
 }
