@@ -9,8 +9,6 @@ This document records the sanitation done on top of the official OpenAPI specifi
 The OpenAPI specification is obtained from [HubSpot CRM Contact OPenAPI Documentation](https://github.com/HubSpot/HubSpot-public-api-spec-collection/blob/main/PublicApiSpecs/CRM/Contacts/Rollouts/424/v3/contacts.json).
 These changes are done in order to improve the overall usability, and as workarounds for some known language limitations.
 
-[//]: # (TODO: Add sanitation details)
-
 1. **Change the `url` property of the `servers` object**:
 
     - **Original**: [https://api.hubapi.com](https://api.hubapi.com)
