@@ -1,4 +1,4 @@
-// Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+// Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
 //
 // WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -17,9 +17,9 @@
 import ballerina/http;
 import ballerina/test;
 
-configurable OAuth2RefreshTokenGrantConfig & readonly authConfig = ?;
+configurable OAuth2RefreshTokenGrantConfig & readonly auth = ?;
 
-Client baseClient = check new (config = {auth: authConfig});
+Client hubSpotCrmContact = check new ({ auth });
 
 const int contactToContactAssociationTypeId = 449;
 string testContactId = "";
@@ -30,7 +30,7 @@ string testContactId = "";
 function testMergeTwoContactsWithSameType() returns error? {
     // create a another contact to be merged
     string testFirstName = "jimmy";
-    SimplePublicObject|error newContact = baseClient->/.post({
+    SimplePublicObject newContact = check hubSpotCrmContact->/.post({
         associations: [
             {
                 to: {
@@ -43,19 +43,19 @@ function testMergeTwoContactsWithSameType() returns error? {
             "firstname": testFirstName
         }
     });
-    string newContactId = newContact is SimplePublicObject ? newContact.id : "";
+    string newContactId = newContact.id;
     // merge the two contacts created
-    SimplePublicObject|error response = baseClient->/merge.post({
+    SimplePublicObject response = check hubSpotCrmContact->/merge.post({
         objectIdToMerge: testContactId,
         primaryObjectId: newContactId
     });
-    test:assertTrue(response is SimplePublicObject);
+    test:assertTrue(response.id.length() > 0);
 }
 
 @test:Config {}
 function testArchiveBatchOfContactsById() returns error? {
     string contactId = "4243242";
-    http:Response|error response = check baseClient->/batch/archive.post({
+    http:Response response = check hubSpotCrmContact->/batch/archive.post({
         inputs: [
             {
                 id: contactId
@@ -63,7 +63,7 @@ function testArchiveBatchOfContactsById() returns error? {
         ]
     });
 
-    test:assertTrue(response is http:Response && response.statusCode == 204);
+    test:assertEquals(response.statusCode, 204);
 
 }
 
@@ -71,7 +71,7 @@ function testArchiveBatchOfContactsById() returns error? {
     dependsOn: [testCreateContact]
 }
 function testReadBatchOfContactsByInternalIdOrUniquePropertyValues() returns error? {
-    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error response = baseClient->/batch/read.post({
+    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/read.post({
         propertiesWithHistory: ["firstname"],
         idProperty: "email",
         inputs: [
@@ -82,14 +82,15 @@ function testReadBatchOfContactsByInternalIdOrUniquePropertyValues() returns err
         properties: ["firstname"]
     });
 
-    test:assertTrue(response is BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors);
+    string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
+    test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
 
 }
 
 @test:Config {}
 function testCreateContact() returns error? {
     string testFirstName = "john";
-    SimplePublicObject|error response = baseClient->/.post({
+    SimplePublicObject response = check hubSpotCrmContact->/.post({
         associations: [
             {
                 to: {
@@ -103,22 +104,22 @@ function testCreateContact() returns error? {
         }
     });
     // set the test contact id as created one
-    testContactId = response is SimplePublicObject ? response.id : "";
-    test:assertTrue(response is SimplePublicObject && response.properties["firstname"] == testFirstName);
+    testContactId = response.id;
+    test:assertTrue(response.properties["firstname"] == testFirstName);
 }
 
 @test:Config {}
 function testGetPageOfContacts() returns error? {
-    CollectionResponseSimplePublicObjectWithAssociationsForwardPaging|error response = baseClient->/();
-    test:assertTrue(response is CollectionResponseSimplePublicObjectWithAssociationsForwardPaging);
+    CollectionResponseSimplePublicObjectWithAssociationsForwardPaging response = check hubSpotCrmContact->/();
+    test:assertTrue(response.results.length() >= 0);
 }
 
 @test:Config {
     dependsOn: [testCreateContact]
 }
 function testGetContactByContactId() returns error? {
-    SimplePublicObjectWithAssociations|error response = baseClient->/[testContactId]();
-    test:assertTrue(response is SimplePublicObjectWithAssociations && response.id == testContactId);
+    SimplePublicObjectWithAssociations response = check hubSpotCrmContact->/[testContactId]();
+    test:assertEquals(response.id, testContactId);
 }
 
 @test:Config {
@@ -126,21 +127,21 @@ function testGetContactByContactId() returns error? {
 }
 function testPartialUpdateOfContactByContactId() returns error? {
     string testNewFirstName = "johny";
-    SimplePublicObject|error response = baseClient->/[testContactId].patch({
+    SimplePublicObject response = check hubSpotCrmContact->/[testContactId].patch({
         objectWriteTraceId: "1",
         properties: {
             "firstname": testNewFirstName
         }
     });
-    test:assertTrue(response is SimplePublicObject && response.properties["firstname"] == testNewFirstName);
+    test:assertEquals(response.properties["firstname"], testNewFirstName);
 }
 
 @test:Config {
     dependsOn: [testMergeTwoContactsWithSameType]
 }
 function testDeleteContactById() returns error? {
-    http:Response|error response = baseClient->/[testContactId].delete();
-    test:assertTrue(response is http:Response && response.statusCode == 204);
+    http:Response response = check hubSpotCrmContact->/[testContactId].delete();
+    test:assertEquals(response.statusCode, 204);
 }
 
 @test:Config {
@@ -148,7 +149,7 @@ function testDeleteContactById() returns error? {
 }
 function testCreateBatchOfContacts() returns error? {
     string testFirstName = "gayumi";
-    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error response = baseClient->/batch/create.post({
+    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/create.post({
         inputs: [
             {
                 associations: [
@@ -160,35 +161,37 @@ function testCreateBatchOfContacts() returns error? {
             }
         ]
     });
-    test:assertTrue(response is BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors);
+    
+    string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
+    test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
 
 }
 
 @test:Config {}
 function testSearch() returns error? {
     string testSearchQuery = "john";
-    CollectionResponseWithTotalSimplePublicObjectForwardPaging|error response = baseClient->/search.post({
+    CollectionResponseWithTotalSimplePublicObjectForwardPaging response = check hubSpotCrmContact->/search.post({
         query: testSearchQuery,
         'limit: 1,
         after: "0"
     });
-    test:assertTrue(response is CollectionResponseWithTotalSimplePublicObjectForwardPaging && response.total >= 0);
+    test:assertTrue(response.total >= 0);
 }
 
 @test:Config {
     dependsOn: [testDeleteContactById]
 }
 function testGDPRDelete() returns error? {
-    http:Response|error response = baseClient->/gdpr\-delete.post({
+    http:Response response = check hubSpotCrmContact->/gdpr\-delete.post({
         objectId: testContactId
     });
-    test:assertTrue(response is http:Response && response.statusCode == 204);
+    test:assertEquals(response.statusCode, 204);
 
 }
 
 @test:Config {}
 function testBatchRead() returns error? {
-    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors|error response = baseClient->/batch/read.post({
+    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/read.post({
         propertiesWithHistory: ["firstname"],
         idProperty: "",
         inputs: [
@@ -198,7 +201,9 @@ function testBatchRead() returns error? {
         ],
         properties: ["firstname"]
     });
-    test:assertTrue(response is BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors);
+    
+    string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
+    test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
 
 }
 
@@ -208,7 +213,7 @@ function testBatchRead() returns error? {
 function testUpsertBatchOfContacts() returns error? {
     string testUpdatedFirstName = "johnee";
     string testEmail = "johnee@example.com";
-    BatchResponseSimplePublicUpsertObject|BatchResponseSimplePublicUpsertObjectWithErrors|error response = baseClient->/batch/upsert.post({
+    BatchResponseSimplePublicUpsertObject|BatchResponseSimplePublicUpsertObjectWithErrors response = check hubSpotCrmContact->/batch/upsert.post({
         inputs: [
             {
                 idProperty: "email",
@@ -219,5 +224,7 @@ function testUpsertBatchOfContacts() returns error? {
             }
         ]
     });
-    test:assertTrue(response is BatchResponseSimplePublicUpsertObject|BatchResponseSimplePublicUpsertObjectWithErrors);
+    
+    string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
+    test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
 }
