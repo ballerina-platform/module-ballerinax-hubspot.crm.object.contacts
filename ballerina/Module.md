@@ -1,14 +1,11 @@
 ## Overview
 
-[//]: # (TODO: Add overview mentioning the purpose of the module, supported REST API versions, and other high-level details.)
 
 [HubSpot](https://www.hubspot.com) is an AI-powered customer relationship management (CRM) platform. 
 
 The ballerinax/module-ballerinax-hubspot.crm.obj.contacts offers APIs to connect and interact with the [Contact API](https://api.hubapi.com/crm/v3/objects/contacts) endpoints, specifically based on the [API Docs](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts)
 
 ## Setup guide
-
-[//]: # (TODO: Add detailed steps to obtain credentials and configure the module.)
 
 To use the HubSpot connector, you must have access to the HubSpot API through a [HubSpot developer account](https://developers.hubspot.com/get-started) and a project under it. If you do not have a HubSpot Developer account, you can sign up for one [here](https://app.hubspot.com/signup-hubspot/developers?_ga=2.207749649.2047916093.1734412948-232493525.1734412948&step=landing_page).
 
@@ -93,8 +90,6 @@ curl --request POST \
 
 ## Quickstart
 
-[//]: # (TODO: Add a quickstart guide to demonstrate a basic functionality of the module, including sample code snippets.)
-
 To use the `HubSpot CRM Contact Connector` connector in your Ballerina application, update the `.bal` file as follows:
 
 ### Step 1: Import the module
@@ -107,24 +102,22 @@ import ballerinax/hubspot.crm.obj.contact;
 
 ### Step 2: Instantiate a new connector
 
-1. Create a Config.toml file and, configure the obtained credentials in the above steps as follows:
+1. Create a `OAuth2RefreshTokenGrantConfig` with the obtained access token and initialize the connector with it.
+
+```ballerina
+configurable OAuth2RefreshTokenGrantConfig & readonly auth = ?;
+
+final contact:Client contactClient = check new ({ auth });
+```
+
+2. Create a Config.toml file and, configure the obtained credentials in the above steps as follows:
 
 ````toml
-[authConfig]
+[auth]
 clientId = "<Client Id>"
 clientSecret =  "<Client Secret>"
 refreshToken = "<Refresh Token>"
 credentialBearer =  "POST_BODY_BEARER"
-````
-
-2. Create a `OAuth2RefreshTokenGrantConfig` with the obtained access token and initialize the connector with it.
-
-````java
-configurable OAuth2RefreshTokenGrantConfig & readonly authConfig = ?;
-
-final hubspot.crm.obj.Contact:Client hubSpotContactClient = check new({
-    auth: authConfig
-});
 ````
 
 ### Step 3: Invoke the connector operation
@@ -133,23 +126,29 @@ Now, utilize the available connector operations.
 
 **Create a contact**
 
-````java
-public function main() returns error? {
-    hubspot.crm.obj.contact:SimplePublicObject|error response = hubSpotContactClient->/.post({
-        associations: [
-            {
-                to: {
-                    id: "1"
-                }
+```ballerina
+contact:SimplePublicObjectInputForCreate newContact = {
+    associations: [
+        {
+            to: {
+                id: "associated_id"
             }
-        ],
-        objectWriteTraceId: "1",
-        properties: {
-            "sample_property": "sample value"
         }
-    });
-}
-````
+    ],
+    objectWriteTraceId: "object_write_trace_id",
+    properties: {
+        "sample_property": "sample_value"
+    }
+};
+
+contact:SimplePublicObject response = check contactClient->/.post(newContact);
+```
+
+**List contacts**
+
+```ballerina
+contact:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging contacts = check contactClient->/.get();
+```
 
 ### Step 4: Run the Ballerina application
 
@@ -161,5 +160,3 @@ bal run
 ## Examples
 
 The `Ballerina HubSpot CRM Contacts Connector` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-hubspot.crm.object.contacts/tree/main/examples/), covering the following use cases:
-
-[//]: # (TODO: Add examples)
