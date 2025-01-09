@@ -19,7 +19,7 @@ import ballerina/test;
 
 configurable OAuth2RefreshTokenGrantConfig & readonly auth = ?;
 
-Client hubSpotCrmContact = check new ({ auth });
+Client hubSpotCrmContact = check new ({auth});
 
 const int CONTACT_TO_CONTACT_ASSOCIATION_TYPE_ID = 449;
 string testContactId = "";
@@ -150,7 +150,7 @@ function testCreateBatchOfContacts() returns error? {
     BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/create.post({
         inputs: [
             {
-                associations: [   
+                associations: [
                 ],
                 properties: {
                     "firstname": testFirstName
@@ -158,7 +158,7 @@ function testCreateBatchOfContacts() returns error? {
             }
         ]
     });
-    
+
     string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
     test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
 }
@@ -196,7 +196,7 @@ function testBatchRead() returns error? {
         ],
         properties: ["firstname"]
     });
-    
+
     string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
     test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
 }
@@ -218,7 +218,7 @@ function testUpsertBatchOfContacts() returns error? {
             }
         ]
     });
-    
+
     string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
     test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
 }

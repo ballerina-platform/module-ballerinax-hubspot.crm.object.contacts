@@ -1,9 +1,10 @@
 ## Overview
 
-
 [HubSpot](https://www.hubspot.com) is an AI-powered customer relationship management (CRM) platform. 
 
-The ballerinax/module-ballerinax-hubspot.crm.obj.contacts offers APIs to connect and interact with the [Contact API](https://api.hubapi.com/crm/v3/objects/contacts) endpoints, specifically based on the [API Docs](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts)
+The `ballerinax/module-ballerinax-hubspot.crm.obj.contacts` package offers APIs to connect and interact with the [HubSpot Contact API](https://api.hubapi.com/crm/v3/objects/contacts) endpoints, specifically based on the [HubSpot REST API](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts).
+
+Using this API, users can develop applications easily that enables you to manage contacts easily.
 
 ## Setup guide
 
@@ -96,8 +97,8 @@ To use the `HubSpot CRM Contact Connector` connector in your Ballerina applicati
 
 Import the `hubspot.crm.obj.contact` module.
 
-````java
-import ballerinax/hubspot.crm.obj.contact;
+````ballerina
+import ballerinax/hubspot.crm.obj.contacts;
 ````
 
 ### Step 2: Instantiate a new connector
@@ -107,7 +108,7 @@ import ballerinax/hubspot.crm.obj.contact;
 ```ballerina
 configurable OAuth2RefreshTokenGrantConfig & readonly auth = ?;
 
-final contact:Client contactClient = check new ({ auth });
+final contacts:Client hubSpotContacts = check new ({ auth });
 ```
 
 2. Create a Config.toml file and, configure the obtained credentials in the above steps as follows:
@@ -127,7 +128,7 @@ Now, utilize the available connector operations.
 **Create a contact**
 
 ```ballerina
-contact:SimplePublicObjectInputForCreate newContact = {
+contacts:SimplePublicObjectInputForCreate newContact = {
     associations: [
         {
             to: {
@@ -141,13 +142,13 @@ contact:SimplePublicObjectInputForCreate newContact = {
     }
 };
 
-contact:SimplePublicObject response = check contactClient->/.post(newContact);
+contacts:SimplePublicObject response = check hubSpotContacts->/.post(newContact);
 ```
 
 **List contacts**
 
 ```ballerina
-contact:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging contacts = check contactClient->/.get();
+contacts:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging contacts = check hubSpotContacts->/.get();
 ```
 
 ### Step 4: Run the Ballerina application
@@ -160,3 +161,6 @@ bal run
 ## Examples
 
 The `Ballerina HubSpot CRM Contacts Connector` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-hubspot.crm.object.contacts/tree/main/examples/), covering the following use cases:
+
+1. [Email-Advertising](https://github.com/) - Unsubscribe and remove customers based on email addresses imported through a CSV file.
+2. [Event-Registration](https://github.com/) - Event registration and follow up using data imported through a CSV file.

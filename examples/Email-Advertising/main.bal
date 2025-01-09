@@ -39,7 +39,6 @@ public function main() returns error? {
     string[][] csvData = check io:fileReadCsv(csvFilePath, 1);
     io:println("[TASK] finish loading csv data");
 
-
     io:println("[TASK] start fetching contacts from API");
     // fetch the contacts from the contacts API
     contacts:CollectionResponseSimplePublicObjectWithAssociationsForwardPaging contactsResponse = check contactClient->/('limit = 100, properties = ["email"], propertiesWithHistory = []);
@@ -80,7 +79,7 @@ public function main() returns error? {
     io:println("[TASK] finish all the tasks");
 }
 
-public function unsubscribeCustomer(string email, map<string> contactsWithEmail) returns error? {    
+public function unsubscribeCustomer(string email, map<string> contactsWithEmail) returns error? {
     if (contactsWithEmail.hasKey(email)) {
         // get the id of the contact with given email
         string? id = contactsWithEmail[email];

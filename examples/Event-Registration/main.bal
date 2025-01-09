@@ -25,8 +25,8 @@ configurable contacts:OAuth2RefreshTokenGrantConfig & readonly auth = ?;
 
 contacts:Client contactClient = check new ({auth});
 
-public function main()returns error? {
-    
+public function main() returns error? {
+
     // read the csv file as a 2D array if exists
     boolean fileExists = check file:test(csvFilePath, file:EXISTS);
     if (!fileExists) {
@@ -110,7 +110,7 @@ public function batchAttendanceMarking(string[][] csvData) returns error? {
             }
         });
     }
-    
+
     io:println("[TASK] start calling API");
     // call the batch upsert endpoint via client
     contacts:BatchResponseSimplePublicUpsertObject|contacts:BatchResponseSimplePublicUpsertObjectWithErrors response = check contactClient->/batch/upsert.post({
