@@ -169,8 +169,8 @@ bal run
 
 The `Ballerina HubSpot CRM Contacts Connector` connector provides practical examples illustrating usage in various scenarios. Explore these [examples](https://github.com/module-ballerinax-hubspot.crm.object.contacts/tree/main/examples/), covering the following use cases:
 
-1. [Email-Advertising](https://github.com/) - Unsubscribe and remove customers based on email addresses imported through a CSV file.
-2. [Event-Registration](https://github.com/) - Event registration and follow up using data imported through a CSV file.
+1. [Email-Advertising](./examples/Email-Advertising/) - Unsubscribe and remove customers based on email addresses imported through a CSV file.
+2. [Event-Registration](./examples/Event-Registration/) - Event registration and follow-up using CSV-Imported data.
 
 ## Build from the source
 

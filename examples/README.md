@@ -2,8 +2,8 @@
 
 The `ballerinax/hubspot.crm.object.contacts` connector provides practical examples illustrating usage in various scenarios.
 
-1. [Email-Advertising](https://github.com/) - Unsubscribe and remove customers based on email addresses imported through a CSV file.
-2. [Event-Registration](https://github.com/) - Event registration and follow up using data imported through a CSV file.
+1. [Email-Advertising](./Email-Advertising/) - Unsubscribe and remove customers based on email addresses imported through a CSV file.
+2. [Event-Registration](./Event-Registration/) - vent registration and follow-up using CSV-Imported data.
 
 ## Prerequisites
 
