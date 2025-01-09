@@ -5,7 +5,7 @@ name = "hubspot.crm.obj.contacts"
 version = "0.1.0"
 license = ["Apache-2.0"]
 authors = ["Ballerina"]
-keywords = ["HubSpot", "Customer", "Management", "Connector", "CRM"]
+keywords = ["hubspot", "customer", "management", "connector", "crm"]
 icon = "icon.png"
 repository = "https://github.com/ballerina-platform/module-ballerinax-hubspot.crm.obj.contacts"
 
