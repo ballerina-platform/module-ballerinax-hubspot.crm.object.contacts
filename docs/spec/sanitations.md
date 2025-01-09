@@ -13,7 +13,7 @@ These changes are done in order to improve the overall usability, and as workaro
 
     - **Original**: [https://api.hubapi.com](https://api.hubapi.com)
     - **Updated**: [https://api.hubapi.com/crm/v3/objects/contacts](https://api.hubapi.com/crm/v3/objects/contacts)
-    - **Reason**: This change is made to ensure that all API paths are relative to the versioned base URL (/2), which improves the consistency and usability of the APIs.
+    - **Reason**: This change is made to ensure that all API paths are relative to the versioned base URL (/3), which improves the consistency and usability of the APIs.
 
 2. **Update API Paths**:
 
@@ -31,4 +31,4 @@ The following command was used to generate the Ballerina client from the OpenAPI
 ```bash
 bal openapi -i docs/spec/openapi.json --mode client --license docs/license.txt -o ballerina
 ```
-Note: The license year is hardcoded to 2024, change if necessary.
+Note: The license year is hardcoded to 2025, change if necessary.

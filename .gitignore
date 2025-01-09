@@ -47,6 +47,8 @@ generated/
 *Ballerina.lock
 .ballerina
 **/Config.toml
+**/target/
+**/generated/
 
 # Ignore Gradle project-specific cache directory
 .gradle
@@ -59,3 +61,8 @@ docker.env
 
 # Test config file
 ballerina/tests/Config.toml
+
+# Data files
+*.csv
+
+

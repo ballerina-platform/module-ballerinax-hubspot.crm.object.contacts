@@ -21,7 +21,7 @@ configurable OAuth2RefreshTokenGrantConfig & readonly auth = ?;
 
 Client hubSpotCrmContact = check new ({ auth });
 
-const int contactToContactAssociationTypeId = 449;
+const int CONTACT_TO_CONTACT_ASSOCIATION_TYPE_ID = 449;
 string testContactId = "";
 
 @test:Config {
@@ -64,7 +64,6 @@ function testArchiveBatchOfContactsById() returns error? {
     });
 
     test:assertEquals(response.statusCode, 204);
-
 }
 
 @test:Config {
@@ -84,7 +83,6 @@ function testReadBatchOfContactsByInternalIdOrUniquePropertyValues() returns err
 
     string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
     test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
-
 }
 
 @test:Config {}
@@ -105,7 +103,7 @@ function testCreateContact() returns error? {
     });
     // set the test contact id as created one
     testContactId = response.id;
-    test:assertTrue(response.properties["firstname"] == testFirstName);
+    test:assertEquals(response.properties["firstname"], testFirstName);
 }
 
 @test:Config {}
@@ -152,8 +150,7 @@ function testCreateBatchOfContacts() returns error? {
     BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/create.post({
         inputs: [
             {
-                associations: [
-                    
+                associations: [   
                 ],
                 properties: {
                     "firstname": testFirstName
@@ -164,7 +161,6 @@ function testCreateBatchOfContacts() returns error? {
     
     string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
     test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
-
 }
 
 @test:Config {}
@@ -186,7 +182,6 @@ function testGDPRDelete() returns error? {
         objectId: testContactId
     });
     test:assertEquals(response.statusCode, 204);
-
 }
 
 @test:Config {}
@@ -204,7 +199,6 @@ function testBatchRead() returns error? {
     
     string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
     test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
-
 }
 
 @test:Config {
