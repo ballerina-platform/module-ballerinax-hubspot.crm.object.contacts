@@ -15,17 +15,42 @@
 // under the License.
 
 import ballerina/http;
+import ballerina/oauth2;
+import ballerina/os;
 import ballerina/test;
 
-configurable OAuth2RefreshTokenGrantConfig & readonly auth = ?;
+configurable boolean isLiveServer = os:getEnv("IS_LIVE_SERVER") == "true";
+configurable string serviceUrl = isLiveServer ? "https://api.hubapi.com/crm/v3/objects/contacts" : "http://localhost:9090";
 
-Client hubSpotCrmContact = check new ({auth});
+final string clientId = os:getEnv("HUBSPOT_CLIENT_ID");
+final string clientSecret = os:getEnv("HUBSPOT_CLIENT_SECRET");
+final string refreshToken = os:getEnv("HUBSPOT_REFRESH_TOKEN");
+
+Client hubSpotCrmContact = check initClient();
 
 const int CONTACT_TO_CONTACT_ASSOCIATION_TYPE_ID = 449;
 string testContactId = "";
 
+isolated function initClient() returns Client|error {
+    if isLiveServer {
+        OAuth2RefreshTokenGrantConfig auth = {
+            clientId: clientId,
+            clientSecret: clientSecret,
+            refreshToken: refreshToken,
+            credentialBearer: oauth2:POST_BODY_BEARER
+        };
+        return check new ({auth}, serviceUrl);
+    }
+    return check new ({
+        auth: {
+            token: "test-token"
+        }
+    }, serviceUrl);
+}
+
 @test:Config {
-    dependsOn: [testCreateBatchOfContacts]
+    dependsOn: [testCreateBatchOfContacts],
+    groups: ["live_tests"]
 }
 function testMergeTwoContactsWithSameType() returns error? {
     // create a another contact to be merged
@@ -52,7 +77,9 @@ function testMergeTwoContactsWithSameType() returns error? {
     test:assertTrue(response.id.length() > 0);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["mock_tests", "live_tests"]
+}
 function testArchiveBatchOfContactsById() returns error? {
     string contactId = "4243242";
     http:Response response = check hubSpotCrmContact->/batch/archive.post({
@@ -67,7 +94,8 @@ function testArchiveBatchOfContactsById() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testCreateContact]
+    dependsOn: [testCreateContact],
+    groups: ["live_tests"]
 }
 function testReadBatchOfContactsByInternalIdOrUniquePropertyValues() returns error? {
     BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/read.post({
@@ -85,7 +113,9 @@ function testReadBatchOfContactsByInternalIdOrUniquePropertyValues() returns err
     test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["mock_tests", "live_tests"]
+}
 function testCreateContact() returns error? {
     string testFirstName = "john";
     SimplePublicObject response = check hubSpotCrmContact->/.post({
@@ -106,14 +136,17 @@ function testCreateContact() returns error? {
     test:assertEquals(response.properties["firstname"], testFirstName);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["mock_tests", "live_tests"]
+}
 function testGetPageOfContacts() returns error? {
     CollectionResponseSimplePublicObjectWithAssociationsForwardPaging response = check hubSpotCrmContact->/();
     test:assertTrue(response.results.length() >= 0);
 }
 
 @test:Config {
-    dependsOn: [testCreateContact]
+    dependsOn: [testCreateContact],
+    groups: ["mock_tests", "live_tests"]
 }
 function testGetContactByContactId() returns error? {
     SimplePublicObjectWithAssociations response = check hubSpotCrmContact->/[testContactId]();
@@ -121,7 +154,8 @@ function testGetContactByContactId() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testGetContactByContactId]
+    dependsOn: [testGetContactByContactId],
+    groups: ["mock_tests", "live_tests"]
 }
 function testPartialUpdateOfContactByContactId() returns error? {
     string testNewFirstName = "johny";
@@ -135,7 +169,8 @@ function testPartialUpdateOfContactByContactId() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testMergeTwoContactsWithSameType]
+    dependsOn: [testMergeTwoContactsWithSameType],
+    groups: ["mock_tests", "live_tests"]
 }
 function testDeleteContactById() returns error? {
     http:Response response = check hubSpotCrmContact->/[testContactId].delete();
@@ -143,7 +178,8 @@ function testDeleteContactById() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testUpsertBatchOfContacts]
+    dependsOn: [testUpsertBatchOfContacts],
+    groups: ["mock_tests", "live_tests"]
 }
 function testCreateBatchOfContacts() returns error? {
     string testFirstName = "gayumi";
@@ -163,7 +199,9 @@ function testCreateBatchOfContacts() returns error? {
     test:assertTrue(statuses.filter(status => status == response.status).length() > 0);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testSearch() returns error? {
     string testSearchQuery = "john";
     CollectionResponseWithTotalSimplePublicObjectForwardPaging response = check hubSpotCrmContact->/search.post({
@@ -175,7 +213,8 @@ function testSearch() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testDeleteContactById]
+    dependsOn: [testDeleteContactById],
+    groups: ["mock_tests", "live_tests"]
 }
 function testGDPRDelete() returns error? {
     http:Response response = check hubSpotCrmContact->/gdpr\-delete.post({
@@ -184,7 +223,9 @@ function testGDPRDelete() returns error? {
     test:assertEquals(response.statusCode, 204);
 }
 
-@test:Config {}
+@test:Config {
+    groups: ["live_tests"]
+}
 function testBatchRead() returns error? {
     BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/read.post({
         propertiesWithHistory: ["firstname"],
@@ -202,7 +243,8 @@ function testBatchRead() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testPartialUpdateOfContactByContactId]
+    dependsOn: [testPartialUpdateOfContactByContactId],
+    groups: ["live_tests"]
 }
 function testUpsertBatchOfContacts() returns error? {
     string testUpdatedFirstName = "johnee";
