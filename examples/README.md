@@ -7,7 +7,7 @@ The `ballerinax/hubspot.crm.object.contacts` connector provides practical exampl
 
 ## Prerequisites
 
-1. Generate HubSpot credentials to authenticate the connector as described in the [Setup guide](https://central.ballerina.io/ballerinax/twitter/latest#setup-guide).
+1. Generate HubSpot credentials to authenticate the connector as described in the [Setup guide](https://github.com/ballerina-platform/module-ballerinax-hubspot.crm.object.contacts/blob/main/README.md#setup-guide).
 
 2. For each example, create a `Config.toml` file with the related configuration. Below is an example of how your `Config.toml` file should be structured:
 
