@@ -50,7 +50,7 @@ string testContactId = "";
 
 @test:Config {
     dependsOn: [testCreateBatchOfContacts],
-    groups: ["live_tests"]
+    groups: ["mock_tests", "live_tests"]
 }
 function testMergeTwoContactsWithSameType() returns error? {
     // create a another contact to be merged
@@ -95,7 +95,7 @@ function testArchiveBatchOfContactsById() returns error? {
 
 @test:Config {
     dependsOn: [testCreateContact],
-    groups: ["live_tests"]
+    groups: ["mock_tests", "live_tests"]
 }
 function testReadBatchOfContactsByInternalIdOrUniquePropertyValues() returns error? {
     BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/read.post({
@@ -178,7 +178,7 @@ function testDeleteContactById() returns error? {
 }
 
 @test:Config {
-    dependsOn: [testUpsertBatchOfContacts],
+    dependsOn: [testBatchUpdate],
     groups: ["mock_tests", "live_tests"]
 }
 function testCreateBatchOfContacts() returns error? {
@@ -200,7 +200,7 @@ function testCreateBatchOfContacts() returns error? {
 }
 
 @test:Config {
-    groups: ["live_tests"]
+    groups: ["mock_tests", "live_tests"]
 }
 function testSearch() returns error? {
     string testSearchQuery = "john";
@@ -224,18 +224,22 @@ function testGDPRDelete() returns error? {
 }
 
 @test:Config {
-    groups: ["live_tests"]
+    dependsOn: [testUpsertBatchOfContacts],
+    groups: ["mock_tests", "live_tests"]
 }
-function testBatchRead() returns error? {
-    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/read.post({
-        propertiesWithHistory: ["firstname"],
-        idProperty: "",
+function testBatchUpdate() returns error? {
+    string testEmail = "johnee@example.com";
+    string testNewFirstName = "jemy";
+    BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors response = check hubSpotCrmContact->/batch/update.post({
         inputs: [
             {
-                id: testContactId
+                idProperty: "email",
+                id: testEmail,
+                properties: {
+                    "firstname": testNewFirstName
+                }
             }
-        ],
-        properties: ["firstname"]
+        ]
     });
 
     string[] statuses = ["PENDING", "PROCESSING", "CANCELED", "COMPLETE"];
@@ -244,7 +248,7 @@ function testBatchRead() returns error? {
 
 @test:Config {
     dependsOn: [testPartialUpdateOfContactByContactId],
-    groups: ["live_tests"]
+    groups: ["mock_tests", "live_tests"]
 }
 function testUpsertBatchOfContacts() returns error? {
     string testUpdatedFirstName = "johnee";

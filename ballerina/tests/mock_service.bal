@@ -276,6 +276,52 @@ service on new http:Listener(9090) {
         };
     }
 
+    # Merge two contacts with same type
+    #
+    # + return - returns can be any of following types 
+    # http:Ok (successful operation)
+    # http:DefaultStatusCodeResponse (An error occurred.)
+    resource function post merge(@http:Payload PublicMergeInput payload) returns SimplePublicObject {
+        return {
+            "createdAt": "2025-01-14T05:33:22.032Z",
+            "archived": false,
+            "archivedAt": "2025-01-14T05:33:22.032Z",
+            "propertiesWithHistory": {
+                "additionalProp1": [
+                    {
+                        "sourceId": "string",
+                        "sourceType": "string",
+                        "sourceLabel": "string",
+                        "updatedByUserId": 0,
+                        "value": "string",
+                        "timestamp": "2025-01-14T05:33:22.032Z"
+                    }
+                ],
+                "additionalProp2": [
+                    {
+                        "sourceId": "string",
+                        "sourceType": "string",
+                        "sourceLabel": "string",
+                        "updatedByUserId": 0,
+                        "value": "string",
+                        "timestamp": "2025-01-14T05:33:22.032Z"
+                    }
+                ]
+            },
+            "id": "512",
+            "properties": {
+                "property_date": "1572480000000",
+                "property_radio": "option_1",
+                "property_number": "17",
+                "property_string": "value",
+                "property_checkbox": "false",
+                "property_dropdown": "choice_b",
+                "property_multiple_checkboxes": "chocolate;strawberry"
+            },
+            "updatedAt": "2025-01-14T05:33:22.032Z"
+        };
+    }
+
     # Archive a batch of contacts by ID
     #
     # + return - returns can be any of following types 
@@ -291,8 +337,8 @@ service on new http:Listener(9090) {
     # http:Created (successful operation)
     # http:MultiStatus (multiple statuses)
     # http:DefaultStatusCodeResponse (An error occurred.)
-    resource function post batch/create(@http:Payload BatchInputSimplePublicObjectInputForCreate payload) returns BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrorsMultiStatus {
-        return {
+    resource function post batch/create(@http:Payload BatchInputSimplePublicObjectInputForCreate payload) returns BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors {
+        BatchResponseSimplePublicObject response = {
             "completedAt": "2025-01-09T17:04:57.262Z",
             "requestedAt": "2025-01-09T17:04:57.262Z",
             "startedAt": "2025-01-09T17:04:57.262Z",
@@ -353,6 +399,188 @@ service on new http:Listener(9090) {
             ],
             "status": "PENDING"
         };
+
+        return response;
+    }
+
+    # Read a batch of contacts by internal ID, or unique property values
+    #
+    # + archived - Whether to return only results that have been archived.
+    # + return - returns can be any of following types 
+    # http:Ok (successful operation)
+    # http:MultiStatus (multiple statuses)
+    # http:DefaultStatusCodeResponse (An error occurred.)
+    resource function post batch/read(@http:Payload BatchReadInputSimplePublicObjectId payload, boolean archived = false) returns BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors {
+        BatchResponseSimplePublicObject response = {
+            "completedAt": "2025-01-14T05:33:21.974Z",
+            "requestedAt": "2025-01-14T05:33:21.974Z",
+            "startedAt": "2025-01-14T05:33:21.974Z",
+            "links": {
+                "additionalProp1": "string",
+                "additionalProp2": "string"
+            },
+            "results": [
+                {
+                    "createdAt": "2025-01-14T05:33:21.974Z",
+                    "archived": false,
+                    "archivedAt": "2025-01-14T05:33:21.974Z",
+                    "propertiesWithHistory": {
+                        "additionalProp1": [
+                            {
+                                "sourceId": "string",
+                                "sourceType": "string",
+                                "sourceLabel": "string",
+                                "updatedByUserId": 0,
+                                "value": "string",
+                                "timestamp": "2025-01-14T05:33:21.974Z"
+                            }
+                        ],
+                        "additionalProp2": [
+                            {
+                                "sourceId": "string",
+                                "sourceType": "string",
+                                "sourceLabel": "string",
+                                "updatedByUserId": 0,
+                                "value": "string",
+                                "timestamp": "2025-01-14T05:33:21.974Z"
+                            }
+                        ]
+                    },
+                    "id": "512",
+                    "properties": {
+                        "property_date": "1572480000000",
+                        "property_radio": "option_1",
+                        "property_number": "17",
+                        "property_string": "value",
+                        "property_checkbox": "false",
+                        "property_dropdown": "choice_b",
+                        "property_multiple_checkboxes": "chocolate;strawberry"
+                    },
+                    "updatedAt": "2025-01-14T05:33:21.974Z"
+                }
+            ],
+            "status": "PENDING"
+        };
+
+        return response;
+    }
+
+    # Create or update a batch of contacts by unique property values
+    #
+    # + return - returns can be any of following types 
+    # http:Ok (successful operation)
+    # http:MultiStatus (multiple statuses)
+    # http:DefaultStatusCodeResponse (An error occurred.)
+    resource function post batch/upsert(@http:Payload BatchInputSimplePublicObjectBatchInputUpsert payload) returns BatchResponseSimplePublicUpsertObject|BatchResponseSimplePublicUpsertObjectWithErrors {
+        BatchResponseSimplePublicUpsertObject response = {
+            "completedAt": "2025-01-14T05:33:21.962Z",
+            "requestedAt": "2025-01-14T05:33:21.962Z",
+            "startedAt": "2025-01-14T05:33:21.962Z",
+            "links": {
+                "additionalProp1": "string",
+                "additionalProp2": "string"
+            },
+            "results": [
+                {
+                    "createdAt": "2025-01-14T05:33:21.962Z",
+                    "archived": true,
+                    "archivedAt": "2025-01-14T05:33:21.962Z",
+                    "new": true,
+                    "propertiesWithHistory": {
+                        "additionalProp1": [
+                            {
+                                "sourceId": "string",
+                                "sourceType": "string",
+                                "sourceLabel": "string",
+                                "updatedByUserId": 0,
+                                "value": "string",
+                                "timestamp": "2025-01-14T05:33:21.962Z"
+                            }
+                        ],
+                        "additionalProp2": [
+                            {
+                                "sourceId": "string",
+                                "sourceType": "string",
+                                "sourceLabel": "string",
+                                "updatedByUserId": 0,
+                                "value": "string",
+                                "timestamp": "2025-01-14T05:33:21.962Z"
+                            }
+                        ]
+                    },
+                    "id": "string",
+                    "properties": {
+                        "additionalProp1": "string",
+                        "additionalProp2": "string"
+                    },
+                    "updatedAt": "2025-01-14T05:33:21.962Z"
+                }
+            ],
+            "status": "PENDING"
+        };
+
+        return response;
+    }
+
+    # Update a batch of contacts by internal ID, or unique property values
+    #
+    # + return - returns can be any of following types 
+    # http:Ok (successful operation)
+    # http:MultiStatus (multiple statuses)
+    # http:DefaultStatusCodeResponse (An error occurred.)
+    resource function post batch/update(@http:Payload BatchInputSimplePublicObjectBatchInput payload) returns BatchResponseSimplePublicObject|BatchResponseSimplePublicObjectWithErrors {
+        BatchResponseSimplePublicObject response = {
+            "completedAt": "2025-01-14T05:33:21.987Z",
+            "requestedAt": "2025-01-14T05:33:21.987Z",
+            "startedAt": "2025-01-14T05:33:21.987Z",
+            "links": {
+                "additionalProp1": "string",
+                "additionalProp2": "string"
+            },
+            "results": [
+                {
+                    "createdAt": "2025-01-14T05:33:21.987Z",
+                    "archived": false,
+                    "archivedAt": "2025-01-14T05:33:21.987Z",
+                    "propertiesWithHistory": {
+                        "additionalProp1": [
+                            {
+                                "sourceId": "string",
+                                "sourceType": "string",
+                                "sourceLabel": "string",
+                                "updatedByUserId": 0,
+                                "value": "string",
+                                "timestamp": "2025-01-14T05:33:21.987Z"
+                            }
+                        ],
+                        "additionalProp2": [
+                            {
+                                "sourceId": "string",
+                                "sourceType": "string",
+                                "sourceLabel": "string",
+                                "updatedByUserId": 0,
+                                "value": "string",
+                                "timestamp": "2025-01-14T05:33:21.987Z"
+                            }
+                        ]
+                    },
+                    "id": "512",
+                    "properties": {
+                        "property_date": "1572480000000",
+                        "property_radio": "option_1",
+                        "property_number": "17",
+                        "property_string": "value",
+                        "property_checkbox": "false",
+                        "property_dropdown": "choice_b",
+                        "property_multiple_checkboxes": "chocolate;strawberry"
+                    },
+                    "updatedAt": "2025-01-14T05:33:21.987Z"
+                }
+            ],
+            "status": "PENDING"
+        };
+
+        return response;
     }
 
     # Gdpr-delete
@@ -362,5 +590,64 @@ service on new http:Listener(9090) {
     # http:DefaultStatusCodeResponse (An error occurred.)
     resource function post gdpr\-delete(@http:Payload PublicGdprDeleteInput payload) returns http:NoContent {
         return http:NO_CONTENT;
+    }
+
+    # Search
+    #
+    # + return - returns can be any of following types 
+    # http:Ok (successful operation)
+    # http:DefaultStatusCodeResponse (An error occurred.)
+    resource function post search(@http:Payload PublicObjectSearchRequest payload) returns CollectionResponseWithTotalSimplePublicObjectForwardPaging {
+        CollectionResponseWithTotalSimplePublicObjectForwardPaging response = {
+            "total": 0,
+            "paging": {
+                "next": {
+                    "link": "?after=NTI1Cg%3D%3D",
+                    "after": "NTI1Cg%3D%3D"
+                }
+            },
+            "results": [
+                {
+                    "createdAt": "2025-01-14T05:33:22.069Z",
+                    "archived": false,
+                    "archivedAt": "2025-01-14T05:33:22.069Z",
+                    "propertiesWithHistory": {
+                        "additionalProp1": [
+                            {
+                                "sourceId": "string",
+                                "sourceType": "string",
+                                "sourceLabel": "string",
+                                "updatedByUserId": 0,
+                                "value": "string",
+                                "timestamp": "2025-01-14T05:33:22.069Z"
+                            }
+                        ],
+                        "additionalProp2": [
+                            {
+                                "sourceId": "string",
+                                "sourceType": "string",
+                                "sourceLabel": "string",
+                                "updatedByUserId": 0,
+                                "value": "string",
+                                "timestamp": "2025-01-14T05:33:22.069Z"
+                            }
+                        ]
+                    },
+                    "id": "512",
+                    "properties": {
+                        "property_date": "1572480000000",
+                        "property_radio": "option_1",
+                        "property_number": "17",
+                        "property_string": "value",
+                        "property_checkbox": "false",
+                        "property_dropdown": "choice_b",
+                        "property_multiple_checkboxes": "chocolate;strawberry"
+                    },
+                    "updatedAt": "2025-01-14T05:33:22.069Z"
+                }
+            ]
+        };
+
+        return response;
     }
 };
