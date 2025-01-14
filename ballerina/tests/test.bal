@@ -28,9 +28,6 @@ final string refreshToken = os:getEnv("HUBSPOT_REFRESH_TOKEN");
 
 Client hubSpotCrmContact = check initClient();
 
-const int CONTACT_TO_CONTACT_ASSOCIATION_TYPE_ID = 449;
-string testContactId = "";
-
 isolated function initClient() returns Client|error {
     if isLiveServer {
         OAuth2RefreshTokenGrantConfig auth = {
@@ -47,6 +44,9 @@ isolated function initClient() returns Client|error {
         }
     }, serviceUrl);
 }
+
+const int CONTACT_TO_CONTACT_ASSOCIATION_TYPE_ID = 449;
+string testContactId = "";
 
 @test:Config {
     dependsOn: [testCreateBatchOfContacts],
