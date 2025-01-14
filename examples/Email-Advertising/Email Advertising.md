@@ -1,4 +1,4 @@
-## Unsubscribe and Remove Customers from Advertisement Groups
+## Email advertising
 
 This use case demonstrates how the **HubSpot Contacts Connector** can be used to **unsubscribe and remove customers from advertisement groups**. By leveraging the connector, you can easily retrieve contact information and update or delete details related to advertisement campaigns.
 
@@ -6,7 +6,7 @@ This use case demonstrates how the **HubSpot Contacts Connector** can be used to
 
 ### 1. Setup Hubspot developer account
 
-Refer to the [Setup guide](../../ballerina/Package.md#setup-guide) to obtain necessary credentials (client Id, client secret, refresh tokens).
+Refer to the [Setup guide](https://github.com/ballerina-platform/module-ballerinax-hubspot.crm.object.contacts/blob/main/README.md#setup-guide) to obtain necessary credentials (client Id, client secret, refresh tokens).
 
 ### 2. Configuration
 

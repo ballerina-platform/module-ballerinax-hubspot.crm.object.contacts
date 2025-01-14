@@ -1,4 +1,4 @@
-## Event Registration and Follow-up Date Updating via Batch Updates
+## Event registration
 
 This use case demonstrates how you can manage **event registrations** and **follow-up date updates** through **batch updates** using contact information extracted from **CSV files**. By utilizing batch operations via the HubSpot Contacts API, you can efficiently update follow-up dates for event attendees.
 
@@ -6,7 +6,7 @@ This use case demonstrates how you can manage **event registrations** and **foll
 
 ### 1. Setup Hubspot developer account
 
-Refer to the [Setup guide](../../ballerina/Package.md#setup-guide) to obtain necessary credentials (client Id, client secret, refresh tokens).
+Refer to the [Setup guide](https://github.com/ballerina-platform/module-ballerinax-hubspot.crm.object.contacts/blob/main/README.md) to obtain necessary credentials (client Id, client secret, refresh tokens).
 
 ### 2. Configuration
 
