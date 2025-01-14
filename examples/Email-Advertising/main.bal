@@ -23,7 +23,7 @@ configurable string csvFilePath = ?;
 
 configurable contacts:OAuth2RefreshTokenGrantConfig & readonly auth = ?;
 
-contacts:Client contactClient = check new ({auth});
+final contacts:Client contactClient = check new ({auth});
 
 public function main() returns error? {
     // load the csv file data into an 2D array if exists
