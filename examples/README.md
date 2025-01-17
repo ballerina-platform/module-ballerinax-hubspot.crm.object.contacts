@@ -2,13 +2,23 @@
 
 The `ballerinax/hubspot.crm.object.contacts` connector provides practical examples illustrating usage in various scenarios.
 
-[//]: # (TODO: Add examples)
-1. 
-2. 
+1. [Email-Advertising](./Email-Advertising/) - Unsubscribe and remove customers based on email addresses of CSV-imported data..
+2. [Event-Registration](./Event-Registration/) - Event registration and follow-up using CSV-imported data.
 
 ## Prerequisites
 
-[//]: # (TODO: Add prerequisites)
+1. Generate HubSpot credentials to authenticate the connector as described in the [Setup guide](https://github.com/ballerina-platform/module-ballerinax-hubspot.crm.object.contacts/blob/main/README.md#setup-guide).
+
+2. For each example, create a `Config.toml` file with the related configuration. Below is an example of how your `Config.toml` file should be structured:
+
+    ```toml
+    [auth]
+    clientId = "<Client Id>"
+    clientSecret =  "<Client Secret>"
+    refreshToken = "<Refresh Token>"
+    credentialBearer =  "POST_BODY_BEARER"
+    ```
+
 
 ## Running an example
 
