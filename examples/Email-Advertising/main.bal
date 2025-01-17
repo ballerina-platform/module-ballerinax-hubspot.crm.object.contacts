@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/file;
 import ballerina/http;
 import ballerina/io;
 import ballerinax/hubspot.crm.obj.contacts;
@@ -29,11 +28,6 @@ public function main() returns error? {
     // load the csv file data into an 2D array if exists
     // format of the csv data shoud be as follows:
     // email --- action ---
-    boolean fileExists = check file:test(csvFilePath, file:EXISTS);
-    if (!fileExists) {
-        io:println("file does not exists: " + csvFilePath);
-        return;
-    }
 
     io:println("[TASK] loading csv data");
     string[][] csvData = check io:fileReadCsv(csvFilePath, 1);

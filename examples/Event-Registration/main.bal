@@ -14,12 +14,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/file;
 import ballerina/io;
 import ballerinax/hubspot.crm.obj.contacts;
 
 configurable string csvFilePath = ?;
-configurable string task = "REGISTER";
+configurable string task = ?;
 
 configurable contacts:OAuth2RefreshTokenGrantConfig & readonly auth = ?;
 
@@ -27,23 +26,16 @@ final contacts:Client contactClient = check new ({auth});
 
 public function main() returns error? {
 
-    // read the csv file as a 2D array if exists
-    boolean fileExists = check file:test(csvFilePath, file:EXISTS);
-    if (!fileExists) {
-        io:println("file doe snot exists: ", csvFilePath);
-        return;
-    }
-
     io:println("[TASK] loading csv data");
     string[][] csvData = check io:fileReadCsv(csvFilePath, 1);
     io:println("[TASK] finish loading csv data");
 
     match task {
         "REGISTER" => {
-            check batchRegistration(csvData);
+            check registerParticipants(csvData);
         }
         "ATTENDANCE" => {
-            check batchAttendanceMarking(csvData);
+            check markBatchAttendance(csvData);
         }
         _ => {
             io:println("task is not defined");
@@ -54,7 +46,7 @@ public function main() returns error? {
     return;
 }
 
-public function batchRegistration(string[][] csvData) returns error? {
+public function registerParticipants(string[][] csvData) returns error? {
     // create input list with information of the registrants
     contacts:SimplePublicObjectInputForCreate[] inputs = [];
 
@@ -92,7 +84,7 @@ public function batchRegistration(string[][] csvData) returns error? {
 
 }
 
-public function batchAttendanceMarking(string[][] csvData) returns error? {
+public function markBatchAttendance(string[][] csvData) returns error? {
 
     contacts:SimplePublicObjectBatchInputUpsert[] inputs = [];
 
