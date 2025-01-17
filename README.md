@@ -24,23 +24,26 @@ To use the HubSpot connector, you must have access to the HubSpot API through a 
 
 2. Click on the 'App' tab and select an existing project or create a new project for which you want API keys and Authentication Access. 
 
-![HubSpot App Home Page](<docs/setup/resources/hubspot-app-home.png>)
+![hubspot-app-home](https://github.com/user-attachments/assets/8f14b6d5-f537-41fe-a860-1f5fe9489b1c)
+
 
 In order to create a new poject, you must provide a public app name and a redirect url/s. Optionally you can add a app logo and a description for the app.
 
-![HubSpot New App Info](docs/setup/resources/hubspot-new-app-info.png)
+![hubspot-new-app-info](https://github.com/user-attachments/assets/9985a3b4-b540-4f8e-9607-04f384f229b0)
+
 
 To add redirect url/s for the app, click the 'Auth' tab on top of the page, and navigate to 'Redirect URLs' section.
 
-![HubSpot New App Auth](docs/setup/resources/hubspot-new-app-auth.png)
+![hubspot-new-app-auth](https://github.com/user-attachments/assets/85bff298-0c54-4edb-8620-2f244b8eeb5b)
 
-![HubSpot New App Redirect URL](docs/setup/resources/hubspot-new-app-redirect-url.png)
+![hubspot-new-app-redirect-url](https://github.com/user-attachments/assets/fff04140-2445-411d-9dca-f8b6596f678b)
 
 ### Setp 2. Obtain Client ID and Client Secret.
 
 1. After completing the project setup, you will be provided with your client id and client secret.  Make sure to save the provided client id and client secret.
 
-![HuSpot New App Client Id And Secret](docs/setup/resources/hubspot-new-app-client-id-secret.png)
+![hubspot-new-app-client-id-secret](https://github.com/user-attachments/assets/bc2f76ad-91a9-452f-b35f-0344f130beb8)
+
 
 ### 2. Setup OAuth 2.0 Flow
 
@@ -50,7 +53,7 @@ Before proceeding with Quick start, ensure you ave obtained the Access Token and
 
 You will see the scope has defined below way
 
-![HubSpot New App Scopes](docs/setup/resources/hubspot-new-app-scopes.png)
+![hubspot-new-app-scopes](https://github.com/user-attachments/assets/0e5d4f47-440e-4f96-ac6e-176973281422)
 
 2. Obtained the authorization URL (Install URL) from the Auth Section under 'Sample install URL (OAuth)' section.  It will be in this format:
 
@@ -59,7 +62,8 @@ https://app.hubspot.com/oauth/authorize?client_id=<client_id>&redirect_uri=<redi
 ```
 3. Copy and paste the generated URL into your browser. This will redirect you to the HubSpot authorization page.
 
-![HubSpot OAuth Consent Screen](docs/setup/resources/hubspot-oauth-consent-screen.png)
+![hubspot-oauth-consent-screen](https://github.com/user-attachments/assets/d503ef64-f3e4-4959-a3ee-b390c5c9bc62)
+
 
 4. Once you authorize, you will be redirected to your specified redirect URI with an authorization code in the URL.
 
