@@ -17,14 +17,11 @@
 import ballerina/io;
 import ballerinax/hubspot.crm.obj.contacts;
 
-configurable string csvFilePath = ?;
-configurable string task = ?;
-
 configurable contacts:OAuth2RefreshTokenGrantConfig & readonly auth = ?;
 
 final contacts:Client contactClient = check new ({auth});
 
-public function main() returns error? {
+public function main(string csvFilePath, string task) returns error? {
 
     io:println("[TASK] loading csv data");
     string[][] csvData = check io:fileReadCsv(csvFilePath, 1);

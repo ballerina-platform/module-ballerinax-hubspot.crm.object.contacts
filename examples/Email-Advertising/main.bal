@@ -18,13 +18,11 @@ import ballerina/http;
 import ballerina/io;
 import ballerinax/hubspot.crm.obj.contacts;
 
-configurable string csvFilePath = ?;
-
 configurable contacts:OAuth2RefreshTokenGrantConfig & readonly auth = ?;
 
 final contacts:Client contactClient = check new ({auth});
 
-public function main() returns error? {
+public function main(string csvFilePath) returns error? {
     // load the csv file data into an 2D array if exists
     // format of the csv data shoud be as follows:
     // email --- action ---
