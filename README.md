@@ -8,7 +8,7 @@
 
 ## Overview
 
-[HubSpot](https://www.hubspot.com) is an AI-powered customer relationship management (CRM) platform. 
+[HubSpot](https://www.hubspot.com) is an AI-powered customer relationship management (CRM) platform.
 
 The `ballerinax/module-ballerinax-hubspot.crm.obj.contacts` package offers APIs to connect and interact with the [HubSpot Contact API](https://api.hubapi.com/crm/v3/objects/contacts) endpoints, specifically based on the [HubSpot REST API](https://developers.hubspot.com/docs/reference/api/crm/objects/contacts).
 
@@ -22,7 +22,7 @@ To use the HubSpot connector, you must have access to the HubSpot API through a 
 
 1. Open the [HubSpot Developer Portal](https://app.hubspot.com/login/?loginRedirectUrl=https%3A%2F%2Fapp.hubspot.com%2Fsignup-hubspot%2Fdevelopers%3F_ga%3D2.269102326.624948025.1734413225-1764281074.1734413225%26step%3Dlanding_page)
 
-2. Click on the 'App' tab and select an existing project or create a new project for which you want API keys and Authentication Access. 
+2. Click on the 'App' tab and select an existing project or create a new project for which you want API keys and Authentication Access.
 
 ![hubspot-app-home](https://github.com/user-attachments/assets/8f14b6d5-f537-41fe-a860-1f5fe9489b1c)
 
@@ -264,7 +264,7 @@ All the contributors are encouraged to read the [Ballerina Code of Conduct](http
 
 ## Useful links
 
-* For more information go to the [`hubspot.crm.object.contacts` package](https://central.ballerina.io/ballerinax/hubspot.crm.object.contacts/latest).
+* For more information go to the [`hubspot.crm.object.contacts` package](https://central.ballerina.io/ballerinax/hubspot.crm.obj.contacts/latest).
 * For example demonstrations of the usage, go to [Ballerina By Examples](https://ballerina.io/learn/by-example/).
 * Chat live with us via our [Discord server](https://discord.gg/ballerinalang).
 * Post all technical questions on Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.

@@ -1,6 +1,6 @@
 # Examples
 
-The `ballerinax/hubspot.crm.object.contacts` connector provides practical examples illustrating usage in various scenarios.
+The `ballerinax/hubspot.crm.obj.contacts` connector provides practical examples illustrating usage in various scenarios.
 
 1. [Email-Advertising](./Email-Advertising/) - Unsubscribe and remove customers based on email addresses of CSV-imported data..
 2. [Event-Registration](./Event-Registration/) - Event registration and follow-up using CSV-imported data.
