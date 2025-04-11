@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/http;
 import ballerina/io;
 import ballerinax/hubspot.crm.obj.contacts;
 
@@ -89,6 +88,6 @@ public function deleteCustomer(string email, map<string> contactsWithEmail) retu
         // get the id of the contact with given email
         string? id = contactsWithEmail[email];
         // delete the contact with customer with given id
-        http:Response response = check contactClient->/[id.toString()].delete();
+        _ = check contactClient->/[id.toString()].delete();
     }
 }
