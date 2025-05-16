@@ -171,6 +171,10 @@ public isolated client class Client {
         return self.clientEp->post(resourcePath, request, httpHeaders);
     }
 
+    # GDPR DELETE
+    #
+    # + headers - Headers to be sent with the request 
+    # + return - No content 
     resource isolated function post gdpr\-delete(PublicGdprDeleteInput payload, map<string|string[]> headers = {}) returns error? {
         string resourcePath = string `/gdpr-delete`;
         map<anydata> headerValues = {...headers};
